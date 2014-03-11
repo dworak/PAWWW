@@ -2,44 +2,57 @@
 "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>Programowanie aplikacji WWW</title>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<title>Programowanie_aplikacji_WWW_cw1</title>
 		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 		<script>
 			$(document).ready(function() {
-				$(function() {
-					$(".element").draggable();
-				});
+				var obslugaUsuwania = function() {
+					console.log("W funkcji obslugaUsuwania");
+					$(".element").draggable({axis: "x",
+						stop: function(event, ui) {
+        				if(ui.position.left>0) {   
+        					$(this).animate({"left": "0px"}, 600, function(){
+        						$(this).closest(".element").fadeOut(600,function(){
+        							$(this).remove();
+        						});
+        					});
+        				}
+        				else if(ui.position.left<-6800) {
+            				$(this).animate({"left": "-6400px"}, 600);
+       					}                                                   
+    				}
+    				});
+				};
 				$("#wyslij").click(function(){
 					var zawartosc_nazwa = $("#nazwa_text").val();
 					var zawartosc_cena = $("#cena_text").val();
 					var zawartosc_ilosc = $("#ilosc_text").val();
 					
 					$("#lista").append("<div class=\"element\">" + "<div class=\"nazwa\">" + zawartosc_nazwa + "</div>"+ "<div class=\"cena\">" + zawartosc_cena + "</div>"+ "<div class=\"ilosc\">" + zawartosc_nazwa + "</div>"+ "</div>");
-					$(function() {
-						$(".element").draggable();
-					});
+					obslugaUsuwania();
 				});
-				$(".usun").click(function(){
-					$(this).closest(".element").remove();
-				});
+				
+				obslugaUsuwania();
+				//$(".usun").click(function(){
+					//$(this).closest(".element").remove();
+				//});
 				
 			});
 
 		</script>
 	</head>
 	<body>
-		<input id="nazwa_text" type="text" />
-		<input id="ilosc_text" type="text" />
-		<input id="cena_text" type="text" />
-		<input id="wyslij" type="button" value="Wyslij"/>
-		<div id="button">
-			Przycisk		
-		</div>
+
 		<div id="lista">
+			<input id="nazwa_text" type="text" placeholder="Nazwa przedmiotu" />
+			<input id="ilosc_text" type="text" placeholder="Ilosc" style="width: "/>
+			<input id="cena_text" type="text" placeholder="Cena" />
+			<input id="wyslij" type="button" value="Wyslij"/>
 			<div class="element">
 				<div class="nazwa">
 					Przedmiot 1
