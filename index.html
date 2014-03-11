@@ -14,7 +14,17 @@
 					$(".element").draggable();
 				});
 				$("#wyslij").click(function(){
-					$("#lista").append("<div class=\"element\">elment</div>");
+					var zawartosc_nazwa = $("#nazwa_text").val();
+					var zawartosc_cena = $("#cena_text").val();
+					var zawartosc_ilosc = $("#ilosc_text").val();
+					
+					$("#lista").append("<div class=\"element\">" + "<div class=\"nazwa\">" + zawartosc_nazwa + "</div>"+ "<div class=\"cena\">" + zawartosc_cena + "</div>"+ "<div class=\"ilosc\">" + zawartosc_nazwa + "</div>"+ "</div>");
+					$(function() {
+						$(".element").draggable();
+					});
+				});
+				$(".usun").click(function(){
+					$(this).closest(".element").remove();
 				});
 				
 			});
@@ -22,7 +32,9 @@
 		</script>
 	</head>
 	<body>
-		<input id="textbox" type="text" />
+		<input id="nazwa_text" type="text" />
+		<input id="ilosc_text" type="text" />
+		<input id="cena_text" type="text" />
 		<input id="wyslij" type="button" value="Wyslij"/>
 		<div id="button">
 			Przycisk		
@@ -38,10 +50,13 @@
 				<div class="cena">
 					777
 				</div>
+				<div class="usun">
+					X
+				</div>
 			</div>
 			<div class="element">
 				<div class="nazwa">
-					Przedmiot 1
+					Przedmiot 2
 				</div>
 				<div class="ilosc">
 					1
@@ -49,10 +64,13 @@
 				<div class="cena">
 					777
 				</div>
+				<div class="usun">
+					X
+				</div>
 			</div>
 			<div class="element">
 				<div class="nazwa">
-					Przedmiot 1
+					Przedmiot 
 				</div>
 				<div class="ilosc">
 					1
@@ -60,16 +78,8 @@
 				<div class="cena">
 					777
 				</div>
-			</div>
-			<div class="element">
-				<div class="nazwa">
-					Przedmiot 1
-				</div>
-				<div class="ilosc">
-					1
-				</div>
-				<div class="cena">
-					777
+				<div class="usun">
+					X
 				</div>
 			</div>
 		</div>
