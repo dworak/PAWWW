@@ -1,0 +1,29 @@
+.element {
+	display: block;
+	width:200px;
+	background-color: red;
+}
+
+.nazwa{
+	display:inline;
+	width:100px;
+	background-color: green;
+}
+
+.ilosc{
+	display:inline;
+	width: 40px;
+	background-color: blue;
+}
+
+.cena{
+	display:inline;
+	width: 60px;
+	background-color: yellow;
+}
+
+#lista{
+	height: 400px;
+	width: 400px;
+}
+	
