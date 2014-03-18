@@ -2,99 +2,226 @@
 "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		
+
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>Programowanie_aplikacji_WWW_cw1</title>
-		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+		<!-- <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" /> -->
 		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+		<link rel="stylesheet" href="lib/Bootstrap/bootstrap.min.css" />
+		<link rel="stylesheet" href="lib/jQuery/jquery.ui.min.css" />
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+		<script src="//js.leapmotion.com/0.2.0/leap.min.js"></script>
+		<script src="//jqueryleapmotion.s3.amazonaws.com/jquery.leapmotion.min.js"></script>
+		<script src="listaObjects.js"></script>
 		<script>
-			$(document).ready(function() {
-				var obslugaUsuwania = function() {
-					console.log("W funkcji obslugaUsuwania");
-					$(".element").draggable({axis: "x",
-						stop: function(event, ui) {
-        				if(ui.position.left>0) {   
-        					$(this).animate({"left": "0px"}, 600, function(){
-        						$(this).closest(".element").fadeOut(600,function(){
-        							$(this).remove();
-        						});
-        					});
-        				}
-        				else if(ui.position.left<-6800) {
-            				$(this).animate({"left": "-6400px"}, 600);
-       					}                                                   
-    				}
-    				});
-				};
-				$("#wyslij").click(function(){
-					var zawartosc_nazwa = $("#nazwa_text").val();
-					var zawartosc_cena = $("#cena_text").val();
-					var zawartosc_ilosc = $("#ilosc_text").val();
+			$(document).ready(function() {		
+				
+				//Pobieramy dane z localStorage
+				var data = JSON.parse(localStorage.getItem("listaData"));
+				
+				//Jesli zostaly dodane jakiekolwiek dane
+				if(data != 'undefined'){
+					for (var i=0;i<data.length;i++){
+						generateElement(data[i],$(".task-list"));
+					}
+				}
+				
+				//TODO: Przerobic to na bardziej ogolne, przyda sie do generowania roznych div-ow
+				var generateElement = function(params,parent) {
 					
-					$("#lista").append("<div class=\"element\">" + "<div class=\"nazwa\">" + zawartosc_nazwa + "</div>"+ "<div class=\"cena\">" + zawartosc_cena + "</div>"+ "<div class=\"ilosc\">" + zawartosc_nazwa + "</div>"+ "</div>");
-					obslugaUsuwania();
-				});
-				
-				obslugaUsuwania();
-				//$(".usun").click(function(){
-					//$(this).closest(".element").remove();
-				//});
-				
-			});
+					var wrapper = $('<div />', {
+        					"class": 'element'
+        					});
+					
+					if (!parent) {
+						return;
+					}
 
+					$("<div />", {
+						"class" : "nazwa",
+						"text" : params.nazwa
+					}).appendTo(wrapper);
+
+					$("<div />", {
+						"class" : "ilosc",
+						"text" : params.ilosc
+					}).appendTo(wrapper);
+					
+					$("<div />", {
+						"class" : "mnoznik",
+						"text" : "x"
+					}).appendTo(wrapper);
+
+					$("<div />", {
+						"class" : "cena",
+						"text" : params.cena
+					}).appendTo(wrapper);
+				
+					
+					$("<div />", {
+						"class" : "usun",
+						"text" : "Usun"
+					}).appendTo(wrapper);
+					
+					wrapper.appendTo(parent);
+				};
+
+				var obslugaUsuwania = function() {
+					$(".element").draggable({
+						axis : "x",
+						stop : function(event, ui) {
+							if (ui.position.left > 0) {
+								$(this).animate({
+									"left" : "0px"
+								}, 600, function() {
+									$(this).closest(".element").fadeOut(600, function() {
+										$(this).remove();
+									});
+								});
+							} else if (ui.position.left < -6800) {
+								$(this).animate({
+									"left" : "-6400px"
+								}, 600);
+							}
+						}
+					});
+				};
+				obslugaUsuwania();
+
+				var add = function() {
+					
+					function IsNumeric(input){
+    					return (input - 0) == input && (''+input).replace(/^\s+|\s+$/g, "").length > 0;
+					}
+					//Deklaracje 
+					var inputs = $("#todo-form :input");
+					var nazwa, cena, ilosc;
+					
+					//Bidnowanie pol z formularza
+					nazwa = inputs[0].value;
+					cena = inputs[1].value;
+					ilosc = inputs[2].value;
+					
+					//Sprawdzamy czy element, ktory aktualnie dodajemy nie istnieje juz na liscie
+					$(".element").each(function() {
+						var nazwa_local = $(this).find(".nazwa").text();
+						if(nazwa_local.localeCompare(nazwa)==0){
+							alert("Podana pozycja juz zostala dodana wczesniej");
+							return;
+						}
+					});
+					
+					if(IsNumeric(cena)==false){
+						alert("Cena musi byc wartoscia liczbowa");
+						return;
+					}
+					
+					if(IsNumeric(ilosc)==false){
+						alert("Ilosc musi byc wartoscia liczbowa calkowita");
+						return;
+					}
+					
+					//Podstawowa walidacja
+					if (!nazwa) {
+						alert("Podaj nazwe");
+						return;
+					}
+
+					if (!cena) {
+						alert("Podaj cene");
+						return;
+					}
+					
+					if (!ilosc) {
+						alert("Podaj cene");
+						return;
+					}
+					
+					//Id to aktualny timestamp
+					id = new Date().getTime();
+					
+					//Dane, ktore pozniej wrzucimy do listy i do localStorage
+					tempData = {
+						id : id,
+						nazwa : nazwa,
+						cena : cena,
+						ilosc : ilosc
+					};
+
+					//Zapisywanie elementu do local storage
+					var ls = localStorage.getItem("listaData");
+					if(typeof ls != 'undefined'){
+						ls = [];
+					}
+					
+					//Na koniec dodajemy wlasnie przetwarzany element
+					ls.push(JSON.stringify(tempData));
+					localStorage.setItem("listaData", ls);
+					
+					//Tworzymy nowy element listy
+					generateElement(tempData,$(".task-list"))
+
+					//Czyszczenie formularza
+					inputs[0].value = "";
+					inputs[1].value = "";
+					inputs[2].value = "";
+					
+					//Obliczanie sumy koncowej
+					var sum = 0;
+					$(".element").each(function() {
+					   	var cena = Number($(this).find(".cena").text());
+					   	var ilosc = Number($(this).find(".ilosc").text());
+       					sum += (cena * ilosc);
+       					
+   					});
+					
+					//Podstawiamy wartosc, ktora przed chwila wyliczylismy
+					$("#wartosc_suma").text(sum);
+					
+					//Bindujemy usun z odpowiednim callbackiem
+					$(".usun").click(function(){
+						$(this).parent().remove();
+						var sum = 0;
+						$(".element").each(function() {
+					   		var cena = Number($(this).find(".cena").text());
+					   		var ilosc = Number($(this).find(".ilosc").text());
+       						sum += (cena * ilosc);
+   						});
+   						$("#wartosc_suma").text(sum);
+					});
+					
+					//Kazdy potomek moze byc dowolnie przenoszony
+					$(".task-list").sortable();
+				};
+				
+				//Bidnowanie selektor,metoda
+				$("#dodaj").click(add);
+				$("#usun").click(function(){
+					var inputs = $("#todo-form :input");
+					for(var i=0;i<3;i++){
+						inputs[i].value = "";
+					}
+				});
+			});
 		</script>
 	</head>
 	<body>
 
-		<div id="lista">
-			<input id="nazwa_text" type="text" placeholder="Nazwa przedmiotu" />
-			<input id="ilosc_text" type="text" placeholder="Ilosc" style="width: "/>
-			<input id="cena_text" type="text" placeholder="Cena" />
-			<input id="wyslij" type="button" value="Wyslij"/>
-			<div class="element">
-				<div class="nazwa">
-					Przedmiot 1
-				</div>
-				<div class="ilosc">
-					1
-				</div>
-				<div class="cena">
-					777
-				</div>
-				<div class="usun">
-					X
-				</div>
-			</div>
-			<div class="element">
-				<div class="nazwa">
-					Przedmiot 2
-				</div>
-				<div class="ilosc">
-					1
-				</div>
-				<div class="cena">
-					777
-				</div>
-				<div class="usun">
-					X
-				</div>
-			</div>
-			<div class="element">
-				<div class="nazwa">
-					Przedmiot 
-				</div>
-				<div class="ilosc">
-					1
-				</div>
-				<div class="cena">
-					777
-				</div>
-				<div class="usun">
-					X
-				</div>
-			</div>
+		<div class="task-list">
+			<form id="todo-form">
+				<input type="text" placeholder="Nazwa" />
+				<input type="text" placeholder="Cena" />
+				<input type="text" placeholder="Ilosc" />
+				<input type="button" id="dodaj" class="btn btn-primary" value="Dodaj zamowienie" />
+				<input type="button" id="usun" class="btn btn-primary" value="Wyczyść formularz" />
+			</form>
 		</div>
+		<div id="podsumowanie">
+				<div id="text_suma">Suma:</div>
+				<div id="wartosc_suma">0</div>
+				<div id="waluta">PLN</div>
+		</div>
+
 	</body>
 </html>

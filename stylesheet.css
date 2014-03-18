@@ -1,40 +1,14 @@
-.element {
-	display: block;
-	width:500px;
-	height: 44px;
-	background-color: red;
-}
-
-.nazwa{
-	display:inline;
-	width: 100%;
-	min-width: 100em;
-	background-color: green;
-}
-
-.ilosc{
-	display:inline;
-	width: 40px;
-	background-color: blue;
-}
-
-.cena{
-	display:inline;
-	width: 60px;
-	background-color: yellow;
-}
-
-.usun{
-	top: 0px;
-	right: 0px;
-	display:block;
-	position: absolute;
-	width: 44px;
-	height: 44px;
-	background-color:black;
-	background: white;
-	font-size: 14px;
-	text-align: center;
+#podsumowanie{
+	width: 300px;
+    height: auto;
+    background-color: #e3e3e3;
+    min-height: 20px;
+    border-radius: 10px;
+	margin:0px auto;
+	margin-top: 10px;
+	text-align:left;
+	padding:15px;
+	text-align:right;
 }
 
 #lista{
@@ -44,7 +18,8 @@
 	border:2px solid;
 	border-radius:15px;
 	padding: 20px;
-	overflow:scroll;
+	overflow-y:scroll;
+	overflow-x:hidden;
 }
 
 html,body {
@@ -52,32 +27,85 @@ html,body {
     padding: 0;
 }
 
-button {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: none;
-    font-size: 100%;
-    vertical-align: baseline;
-    font-family: inherit;
-    color: inherit;
-    -webkit-appearance: none;
-    -ms-appearance: none;
-    -o-appearance: none;
-    appearance: none;
+.element{
+	position: relative;
+    border-radius: 5px;
+    background-color: #fff;
+    margin-bottom: 5px;
+    padding: 5px;
+}
+
+.task-list{
+    width: 300px;
+    height: auto;
+    background-color: #e3e3e3;
+    min-height: 240px;
+    border-radius: 10px;
+	margin:0px auto;
+	text-align:left;
+	padding:15px;
+	margin-top: 100px;
+}
+
+.task-list input[type=text]{
+    height: 30px;
+    width: 285px;
+}
+
+.task-list input[type=button]{
+	margin-top: 5px;
+    height: 35px;
+    width: 300px;
+}
+
+
+
+.nazwa{
+	width: 30%;
+	display:inline;
+	font-weight: bold;
+}
+
+.mnoznik{
+	width: 30%;
+	display:inline;
+	margin-left: 20px;
+	font-style: italic;
+}
+
+.ilosc{
+	margin-left:30px;
+	font-style: italic;
+	font-size: smaller;
+	display:inline;
+	width: 40px;
+}
+
+.cena{
+	margin-left: 30px;
+	font-size: small;
+	display:inline;
+	width: 60px;
+}
+
+.usun{
+	position: absolute;
+	right: 0;
+	top: 5px;
+	padding-right: 5px; 
+}
+
+#waulta{
+	display: inline;
+}
+
+#suma{
+	display: inline;
 }
 
 body {
-    font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    padding-top: 5em;
-    line-height: 1.4em;
-    background: #eeeeee;
-    color: #4d4d4d;
-    width: 550px;
-    margin: 0 auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
-    -ms-font-smoothing: antialiased;
-    -o-font-smoothing: antialiased;
-    font-smoothing: antialiased;
+    background-color: #374a5d !important;
+    border: 0 !important;
+    padding:0px;
+	text-align:center;
 }
