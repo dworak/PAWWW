@@ -18,15 +18,8 @@
 			$(document).ready(function() {
 
 				//Pobieramy dane z localStorage
-				localStorage.clear();
+				//localStorage.clear();
 				var data = JSON.parse(localStorage.getItem("listaData"));
-
-				//Jesli zostaly dodane jakiekolwiek dane
-				if (data != null) {
-					for (var i = 0; i < data.length; i++) {
-						generateElement(data, $(".task-list"));
-					}
-				}
 
 				//TODO: Przerobic to na bardziej ogolne, przyda sie do generowania roznych div-ow
 				var generateElement = function(params, parent) {
@@ -61,11 +54,24 @@
 
 					$("<div />", {
 						"class" : "usun",
+						"href"	: "#",
 						"text" : "Usun"
 					}).appendTo(wrapper);
 
+
 					wrapper.appendTo(parent);
 				};
+				
+				generateElement(data, $("#lista"));
+				//Jesli zostaly dodane jakiekolwiek dane
+				if (data != null) {
+					for (var i = 0; i < data.length; i++) {
+						generateElement(data, $("#lista"));
+						console.log(data);
+					}
+				}
+
+				
 
 				var obslugaUsuwania = function() {
 					$(".element").draggable({
@@ -105,13 +111,19 @@
 					ilosc = inputs[2].value;
 
 					//Sprawdzamy czy element, ktory aktualnie dodajemy nie istnieje juz na liscie
+					var wyjscie = false;
 					$(".element").each(function() {
 						var nazwa_local = $(this).find(".nazwa").text();
 						if (nazwa_local.localeCompare(nazwa) == 0) {
 							alert("Podana pozycja juz zostala dodana wczesniej");
+							wyjscie = true;
 							return;
 						}
 					});
+					
+					if(wyjscie){
+						return;
+					}
 
 					if (IsNumeric(cena) == false) {
 						alert("Cena musi byc wartoscia liczbowa");
@@ -161,7 +173,7 @@
 					localStorage.setItem("listaData", ls);
 
 					//Tworzymy nowy element listy
-					generateElement(tempData, $(".task-list"))
+					generateElement(tempData, $("#lista"));
 
 					//Czyszczenie formularza
 					inputs[0].value = "";
@@ -180,30 +192,39 @@
 					//Podstawiamy wartosc, ktora przed chwila wyliczylismy
 					$("#wartosc_suma").text(sum);
 
-					//Bindujemy usun z odpowiednim callbackiem
-					$(".usun").click(function() {
-						$(this).parent().remove();
+						//Bindujemy usun z odpowiednim callbackiem
+						$(".usun").click(function() {
+							$(this).parent().remove();
+							var sum = 0;
+							$(".element").each(function() {
+								var cena = Number($(this).find(".cena").text());
+								var ilosc = Number($(this).find(".ilosc").text());
+								sum += (cena * ilosc);
+						});
+						
 						var sum = 0;
 						$(".element").each(function() {
-							var cena = Number($(this).find(".cena").text());
-							var ilosc = Number($(this).find(".ilosc").text());
-							sum += (cena * ilosc);
+								var cena = Number($(this).find(".cena").text());
+								var ilosc = Number($(this).find(".ilosc").text());
+								sum += (cena * ilosc);
 						});
 						$("#wartosc_suma").text(sum);
 					});
 
 					//Kazdy potomek moze byc dowolnie przenoszony
-					$(".task-list").sortable();
+					$("#lista").sortable();
+								$("#usun"
+						).click(function() {
+							var inputs = $("#todo-form :input");
+							for (var i = 0; i < 3; i++) {
+								inputs[i].value = "";
+							}
+						});
 				};
 
 				//Bidnowanie selektor,metoda
 				$("#dodaj").click(add);
-				$("#usun").click(function() {
-					var inputs = $("#todo-form :input");
-					for (var i = 0; i < 3; i++) {
-						inputs[i].value = "";
-					}
-				});
+	
 
 				$(document).keydown(function(e) {
 					if (e.keyCode == 13) {
@@ -223,6 +244,7 @@
 				<input type="text" placeholder="Ilosc" />
 				<input type="button" id="dodaj" class="btn btn-primary" value="Dodaj zamowienie" />
 				<input type="button" id="usun" class="btn btn-primary" value="Wyczyść formularz" />
+				<div id="lista"></div>
 			</form>
 		</div>
 		<div id="podsumowanie">
